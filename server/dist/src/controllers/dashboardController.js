@@ -13,31 +13,44 @@ exports.getDashboardMetrics = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getDashboardMetrics = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('🚀 Dashboard endpoint hit');
     try {
+        yield prisma.$connect();
+        console.log('✅ Database connected');
         const popularProducts = yield prisma.products.findMany({
             take: 15,
             orderBy: {
                 stockQuantity: "desc",
             },
         });
+        console.log(`Found ${popularProducts.length} products`);
         const salesSummary = yield prisma.salesSummary.findMany({
             take: 5,
             orderBy: {
                 date: "desc",
             },
+            select: {
+                salesSummaryId: true,
+                totalValue: true,
+                changePercentage: true,
+                date: true
+            }
         });
+        console.log(`Found ${salesSummary.length} sales summary records`);
         const purchaseSummary = yield prisma.purchaseSummary.findMany({
             take: 5,
             orderBy: {
                 date: "desc",
             },
         });
+        console.log(`Found ${purchaseSummary.length} purchase summary records`);
         const expenseSummary = yield prisma.expenseSummary.findMany({
             take: 5,
             orderBy: {
                 date: "desc",
             },
         });
+        console.log(`Found ${expenseSummary.length} expense summary records`);
         const expenseByCategorySummaryRaw = yield prisma.expenseByCategory.findMany({
             take: 5,
             orderBy: {
@@ -45,16 +58,25 @@ const getDashboardMetrics = (req, res) => __awaiter(void 0, void 0, void 0, func
             },
         });
         const expenseByCategorySummary = expenseByCategorySummaryRaw.map((item) => (Object.assign(Object.assign({}, item), { amount: item.amount.toString() })));
-        res.json({
+        const responseData = {
             popularProducts,
             salesSummary,
             purchaseSummary,
             expenseSummary,
             expenseByCategorySummary,
-        });
+        };
+        console.log('✅ Sending response data:', responseData);
+        res.status(200).json(responseData);
     }
     catch (error) {
-        res.status(500).json({ message: "Error retrieving dashboard metrics" });
+        console.error('❌ Database Error:', error);
+        res.status(500).json({
+            error: 'Database error',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+    finally {
+        yield prisma.$disconnect();
     }
 });
 exports.getDashboardMetrics = getDashboardMetrics;

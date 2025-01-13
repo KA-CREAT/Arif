@@ -57,10 +57,10 @@ model Expenses {
 }
 
 model SalesSummary {
-  salesSummaryId   String   @id
+  salesSummaryId   String   @id @default(uuid())
   totalValue       Float
   changePercentage Float?
-  date             DateTime
+  date            DateTime
 }
 
 model PurchaseSummary {
