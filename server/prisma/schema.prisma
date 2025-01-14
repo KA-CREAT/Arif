@@ -14,17 +14,22 @@ datasource db {
 }
 
 model Users {
-  userId String @id
-  name   String
-  email  String
+  userId    String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String // Keep it as password in schema
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Products {
-  productId     String      @id
+  productId     String      @id @default(uuid())
   name          String
   price         Float
-  rating        Float?
   stockQuantity Int
+  rating        Float?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   Sales         Sales[]
   Purchases     Purchases[]
 }
@@ -40,13 +45,13 @@ model Sales {
 }
 
 model Purchases {
-  purchaseId String   @id
-  productId  String
-  timestamp  DateTime
-  quantity   Int
-  unitCost   Float
-  totalCost  Float
-  product    Products @relation(fields: [productId], references: [productId])
+  purchaseId  String   @id
+  productId   String
+  timestamp   DateTime
+  quantity    Int
+  unitPrice   Float
+  totalAmount Float
+  product     Products @relation(fields: [productId], references: [productId])
 }
 
 model Expenses {
@@ -57,31 +62,28 @@ model Expenses {
 }
 
 model SalesSummary {
-  salesSummaryId   String   @id @default(uuid())
+  id               String   @id @default(uuid())
   totalValue       Float
   changePercentage Float?
-  date            DateTime
+  date             DateTime @default(now())
 }
 
 model PurchaseSummary {
-  purchaseSummaryId String   @id
-  totalPurchased    Float
-  changePercentage  Float?
-  date              DateTime
+  id               String   @id @default(uuid())
+  totalPurchased   Float
+  changePercentage Float?
+  date             DateTime @default(now())
 }
 
 model ExpenseSummary {
-  expenseSummaryId  String              @id
-  totalExpenses     Float
-  date              DateTime
-  ExpenseByCategory ExpenseByCategory[]
+  id            String   @id @default(uuid())
+  totalExpenses Float
+  date          DateTime @default(now())
 }
 
 model ExpenseByCategory {
-  expenseByCategoryId String         @id
-  expenseSummaryId    String
-  category            String
-  amount              BigInt
-  date                DateTime
-  expenseSummary      ExpenseSummary @relation(fields: [expenseSummaryId], references: [expenseSummaryId])
+  id       String   @id @default(uuid())
+  category String
+  amount   Float
+  date     DateTime @default(now())
 }

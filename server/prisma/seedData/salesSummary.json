@@ -1,17 +1,14 @@
 [
   {
+    "salesSummaryId": "SALES-1",
     "totalValue": 15000.00,
-    "changePercentage": 25.5,
-    "date": "2023-10-29T00:00:00.000Z"
+    "changePercentage": 5.5,
+    "date": "2024-03-15T00:00:00.000Z"
   },
   {
-    "totalValue": 12000.00,
-    "changePercentage": 15.2,
-    "date": "2023-10-28T00:00:00.000Z"
-  },
-  {
-    "totalValue": 10500.00,
-    "changePercentage": 10.8,
-    "date": "2023-10-27T00:00:00.000Z"
+    "salesSummaryId": "SALES-2",
+    "totalValue": 14250.00,
+    "changePercentage": 3.2,
+    "date": "2024-03-14T00:00:00.000Z"
   }
 ]
