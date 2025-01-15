@@ -9,11 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.createProduct = exports.getProducts = void 0;
+exports.createProduct = exports.getShop = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-// Get products with optional search
-const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getShop = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const search = (_a = req.query.search) === null || _a === void 0 ? void 0 : _a.toString();
@@ -30,8 +29,7 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ message: "Error retrieving products" });
     }
 });
-exports.getProducts = getProducts;
-// Create a new product
+exports.getShop = getShop;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId, name, price, rating, stockQuantity } = req.body;
@@ -51,25 +49,3 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createProduct = createProduct;
-const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { productId } = req.params;
-        const product = yield prisma.products.delete({
-            where: { productId },
-        });
-        console.log(productId);
-        res.status(201).json({ message: "", product });
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            if (error.code === "P2025") {
-                res.status(404).json({ message: "Product not found" });
-            }
-        }
-        else {
-            console.error("Unexpected error:", error);
-            res.status(500).json({ message: "Unexpected error occurred" });
-        }
-    }
-});
-exports.deleteProduct = deleteProduct;
